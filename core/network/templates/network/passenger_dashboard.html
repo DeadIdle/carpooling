@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head><title>Passenger Dashboard</title></head>
+<body>
+    <h1>Passenger Dashboard</h1>
+    <p>Welcome, {{ request.user.username }}!</p>
+    <p>Wallet Balance: ₹{{ request.user.wallet_balance }}</p>
+    <a href="{% url 'topup_wallet' %}">+ Top Up Wallet</a> |
+    <a href="{% url 'create_request' %}">+ New Request</a> |
+    <a href="{% url 'logout' %}">Logout</a>
+
+    <h2>Active Requests</h2>
+    {% if Ongoing_trips %}
+        <table border="1">
+            <tr>
+                <th>ID</th><th>Pickup</th><th>Dropoff</th><th>Status</th><th>Actions</th>
+            </tr>
+            {% for req in Ongoing_trips %}
+            <tr>
+                <td>{{ req.id }}</td>
+                <td>{{ req.pickup_node }}</td>
+                <td>{{ req.dropoff_node }}</td>
+                <td>{{ req.status }}</td>
+                <td>
+                    <a href="{% url 'view_offers' req.id %}">View Offers</a> |
+                    <form method="POST" action="{% url 'cancel_request' req.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No active requests.</p>
+    {% endif %}
+
+    <h2>Past Requests</h2>
+    {% if Past_trips %}
+        <table border="1">
+            <tr>
+                <th>ID</th><th>Pickup</th><th>Dropoff</th><th>Status</th>
+            </tr>
+            {% for req in Past_trips %}
+            <tr>
+                <td>{{ req.id }}</td>
+                <td>{{ req.pickup_node }}</td>
+                <td>{{ req.dropoff_node }}</td>
+                <td>{{ req.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No past requests.</p>
+    {% endif %}
+
+    <h2>Cancelled Requests</h2>
+    {% if Cancelled_trips %}
+        <table border="1">
+            <tr>
+                <th>ID</th><th>Pickup</th><th>Dropoff</th>
+            </tr>
+            {% for req in Cancelled_trips %}
+            <tr>
+                <td>{{ req.id }}</td>
+                <td>{{ req.pickup_node }}</td>
+                <td>{{ req.dropoff_node }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No cancelled requests.</p>
+    {% endif %}
+</body>
+</html>

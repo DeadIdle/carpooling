@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Create Trip</title></head>
+<body>
+    <h1>Create a New Trip</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>Start Node</label><br>
+        <select name="start_node" required>
+            <option value="">-- Select --</option>
+            {% for node in nodes %}
+                <option value="{{ node.id }}">{{ node.location }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label>End Node</label><br>
+        <select name="end_node" required>
+            <option value="">-- Select --</option>
+            {% for node in nodes %}
+                <option value="{{ node.id }}">{{ node.location }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label>Max Passengers</label><br>
+        <input type="number" name="max_passengers" value="3" min="1" max="10"><br><br>
+        <button type="submit">Create Trip</button>
+    </form>
+    <a href="{% url 'driver_dashboard' %}">Back</a>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>Create Request</title></head>
+<body>
+    <h1>Request a Carpool</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>Pickup Node</label><br>
+        <select name="pickup_node" required>
+            <option value="">-- Select --</option>
+            {% for node in nodes %}
+                <option value="{{ node.id }}">{{ node.location }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label>Dropoff Node</label><br>
+        <select name="dropoff_node" required>
+            <option value="">-- Select --</option>
+            {% for node in nodes %}
+                <option value="{{ node.id }}">{{ node.location }}</option>
+            {% endfor %}
+        </select><br><br>
+        <button type="submit">Create Request</button>
+    </form>
+    <a href="{% url 'passenger_dashboard' %}">Back</a>
+</body>
+</html>

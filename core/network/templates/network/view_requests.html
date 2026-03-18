@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><title>View Requests</title></head>
+<body>
+    <h1>Incoming Carpool Requests</h1>
+    <p>Active Trip: {{ Active_Trip.start_node }} → {{ Active_Trip.end_node }}</p>
+    <a href="{% url 'driver_dashboard' %}">Back to Dashboard</a>
+
+    {% if full %}
+        <p style="color:red;">Your trip is full, no more passengers can be added.</p>
+    {% elif Requests|length > 0 %}
+        <table border="1">
+            <tr>
+                <th>Passenger</th><th>Pickup</th><th>Dropoff</th><th>Action</th>
+            </tr>
+            {% for req in Requests %}
+            <tr>
+                <td>{{ req.passenger }}</td>
+                <td>{{ req.pickup_node.location }}</td>
+                <td>{{ req.dropoff_node.location }}</td>
+                <td>
+                    <form method="POST" action="{% url 'make_offer' Active_Trip.id req.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Make Offer</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No matching requests at the moment.</p>
+    {% endif %}
+</body>
+</html>

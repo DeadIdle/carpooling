@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head><title>Driver Dashboard</title></head>
+<body>
+    <h1>Driver Dashboard</h1>
+    <p>Welcome, {{ request.user.username }}!</p>
+    <a href="{% url 'create_trip' %}">+ New Trip</a> |
+    <a href="{% url 'logout' %}">Logout</a>
+
+    <h2>Active Trips</h2>
+    {% if active_trips %}
+        <table border="1">
+            <tr>
+                <th>ID</th><th>From</th><th>To</th><th>Current Node</th><th>Status</th><th>Max Passengers</th><th>Actions</th>
+            </tr>
+            {% for trip in active_trips %}
+            <tr>
+                <td>{{ trip.id }}</td>
+                <td>{{ trip.start_node }}</td>
+                <td>{{ trip.end_node }}</td>
+                <td>{{ trip.current_node }}</td>
+                <td>{{ trip.status }}</td>
+                <td>{{ trip.max_passengers }}</td>
+                <td>
+                    {% if trip.status == 'PLANNED' %}
+                        <a href="{% url 'cancel_trip' trip.id %}">Cancel</a> |
+                    {% endif %}
+                    <a href="{% url 'view_requests' trip.id %}">View Requests</a> |
+                    {% if trip.next_node %}
+                        <form method="POST" action="{% url 'update_current_node' trip.id trip.next_node %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Move to Next Node</button>
+                        </form>
+                    {% else %}
+                        <span>At final node</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No active trips.</p>
+    {% endif %}
+
+    <h2>Past Trips</h2>
+    {% if past_trips %}
+        <table border="1">
+            <tr>
+                <th>ID</th><th>From</th><th>To</th><th>Status</th>
+            </tr>
+            {% for trip in past_trips %}
+            <tr>
+                <td>{{ trip.id }}</td>
+                <td>{{ trip.start_node }}</td>
+                <td>{{ trip.end_node }}</td>
+                <td>{{ trip.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No past trips.</p>
+    {% endif %}
+</body>
+</html>

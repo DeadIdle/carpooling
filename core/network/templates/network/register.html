@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><title>Register</title></head>
+<body>
+    <h1>Register</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>Username</label><br>
+        <input type="text" name="username" required><br><br>
+        <label>Password</label><br>
+        <input type="password" name="password" required><br><br>
+        <label>Mobile Number</label><br>
+        <input type="number" name="mobile_no"><br><br>
+        <label>Role</label><br>
+        <select name="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="DR">Driver</option>
+            <option value="PS">Passenger</option>
+        </select><br><br>
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+</body>
+</html>

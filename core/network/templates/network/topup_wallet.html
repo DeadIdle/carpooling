@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Top Up Wallet</title></head>
+<body>
+    <h1>Top Up Wallet</h1>
+    <p>Current Balance: ₹{{ request.user.wallet_balance }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label>Amount:</label>
+        <input type="number" name="amount" min="1" step="0.01" required>
+        <button type="submit">Top Up</button>
+    </form>
+
+    <a href="{% url 'passenger_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

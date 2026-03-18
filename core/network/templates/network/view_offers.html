@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head><title>View Offers</title></head>
+<body>
+    <h1>Offers for your Request</h1>
+    <p>Pickup: {{ carp_request.pickup_node }} → Dropoff: {{ carp_request.dropoff_node }}</p>
+
+    {% if Offers %}
+        <table border="1">
+            <tr>
+                <th>Driver</th><th>Fare</th><th>Detour Nodes</th><th>Action</th>
+            </tr>
+            {% for offer in Offers %}
+            <tr>
+                <td>{{ offer.trip.driver.username }}</td>
+                <td>₹{{ offer.fare }}</td>
+                <td>{{ offer.detour_nodes }}</td>
+                <td>
+                    {% if offer.status == 'PENDING' %}
+                        <form method="POST" action="{% url 'confirm_offer' carp_request.id offer.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Confirm</button>
+                        </form>
+                    {% else %}
+                        {{ offer.status }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No offers yet. Check back later!</p>
+    {% endif %}
+
+    <a href="{% url 'passenger_dashboard' %}">Back</a>
+</body>
+</html>
