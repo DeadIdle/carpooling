@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: carpooling
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_PASSWORD: Amu_23122006
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

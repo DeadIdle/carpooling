@@ -1,0 +1,184 @@
+[
+{
+  "model": "network.node",
+  "pk": 1,
+  "fields": {
+    "location": "BITS Pilani"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 3,
+  "fields": {
+    "location": "B"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 4,
+  "fields": {
+    "location": "C"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 5,
+  "fields": {
+    "location": "D"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 6,
+  "fields": {
+    "location": "E"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 7,
+  "fields": {
+    "location": "F"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 8,
+  "fields": {
+    "location": "G"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 9,
+  "fields": {
+    "location": "H"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 10,
+  "fields": {
+    "location": "I"
+  }
+},
+{
+  "model": "network.node",
+  "pk": 11,
+  "fields": {
+    "location": "J"
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 1,
+  "fields": {
+    "source": 1,
+    "destination": 3
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 2,
+  "fields": {
+    "source": 3,
+    "destination": 4
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 3,
+  "fields": {
+    "source": 4,
+    "destination": 5
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 4,
+  "fields": {
+    "source": 5,
+    "destination": 6
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 5,
+  "fields": {
+    "source": 6,
+    "destination": 7
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 6,
+  "fields": {
+    "source": 8,
+    "destination": 9
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 7,
+  "fields": {
+    "source": 9,
+    "destination": 11
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 8,
+  "fields": {
+    "source": 10,
+    "destination": 11
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 9,
+  "fields": {
+    "source": 7,
+    "destination": 8
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 10,
+  "fields": {
+    "source": 1,
+    "destination": 5
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 11,
+  "fields": {
+    "source": 3,
+    "destination": 6
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 12,
+  "fields": {
+    "source": 4,
+    "destination": 8
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 13,
+  "fields": {
+    "source": 9,
+    "destination": 11
+  }
+},
+{
+  "model": "network.edge",
+  "pk": 14,
+  "fields": {
+    "source": 7,
+    "destination": 10
+  }
+}
+]
