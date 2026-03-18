@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 import os
 
 # Allow your domain and localhost
-ALLOWED_HOSTS = ['*']  # we'll restrict this to your domain later
+ALLOWED_HOSTS = ['13.201.30.212']  # we'll restrict this to your domain later
 
 
 
