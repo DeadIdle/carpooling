@@ -322,27 +322,28 @@ def update_current_node(request, trip_id, node_id):
 
 @login_required
 def submit_review(request, trip_id):
-    trip = Trip.objects.get(id = trip_id)
+    trip = Trip.objects.get(id=trip_id)
     if request.user.role in ['DR', 'PS'] and trip.status == 'COMPLETED':
-        if Review.objects.filter(reviewer = request.user, trip = trip).exists():
+        if Review.objects.filter(reviewer=request.user, trip=trip).exists():
             messages.error(request, 'You have already reviewed this trip.')
             return redirect('passenger_dashboard')
-        else :
+        else:
             if request.method == 'POST':
                 rating = int(request.POST.get('rating'))
                 comment = request.POST.get('comment')
                 Review.objects.create(
-                    reviewer = request.user,
-                    reviewee = trip.driver if request.user.role == 'PS' else CarpoolOffer.objects.get(trip=trip, status='ACCEPTED').carpool_request.passenger, 
-                    rating = rating,
-                    comment = comment,
-                    trip = trip,
-
+                    reviewer=request.user,
+                    reviewee=trip.driver if request.user.role == 'PS' else CarpoolOffer.objects.get(trip=trip, status='ACCEPTED').carpool_request.passenger,
+                    rating=rating,
+                    comment=comment,
+                    trip=trip,
                 )
-                return redirect('passenger_dashboard' if request.user.role == 'PS' else 'driver_dashboard' )
-                
-            else :
+                return redirect('passenger_dashboard' if request.user.role == 'PS' else 'driver_dashboard')
+            else:
                 return render(request, 'network/submit_review.html', {'trip': trip})
+    else:
+        messages.error(request, 'You cannot review this trip.')
+        return redirect('passenger_dashboard' if request.user.role == 'PS' else 'driver_dashboard')
 
 @login_required
 def driver_profile(request,user_id):
