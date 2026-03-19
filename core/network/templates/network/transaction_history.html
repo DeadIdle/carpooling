@@ -130,3 +130,12 @@
             <td>{{ t.trip }}</td>
             <td>{{ t.created_at }}</td>
           </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty">No transactions yet.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
