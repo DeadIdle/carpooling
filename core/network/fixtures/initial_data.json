@@ -1,184 +1,84 @@
 [
-{
-  "model": "network.node",
-  "pk": 1,
-  "fields": {
-    "location": "BITS Pilani"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 3,
-  "fields": {
-    "location": "B"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 4,
-  "fields": {
-    "location": "C"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 5,
-  "fields": {
-    "location": "D"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 6,
-  "fields": {
-    "location": "E"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 7,
-  "fields": {
-    "location": "F"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 8,
-  "fields": {
-    "location": "G"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 9,
-  "fields": {
-    "location": "H"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 10,
-  "fields": {
-    "location": "I"
-  }
-},
-{
-  "model": "network.node",
-  "pk": 11,
-  "fields": {
-    "location": "J"
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 1,
-  "fields": {
-    "source": 1,
-    "destination": 3
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 2,
-  "fields": {
-    "source": 3,
-    "destination": 4
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 3,
-  "fields": {
-    "source": 4,
-    "destination": 5
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 4,
-  "fields": {
-    "source": 5,
-    "destination": 6
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 5,
-  "fields": {
-    "source": 6,
-    "destination": 7
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 6,
-  "fields": {
-    "source": 8,
-    "destination": 9
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 7,
-  "fields": {
-    "source": 9,
-    "destination": 11
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 8,
-  "fields": {
-    "source": 10,
-    "destination": 11
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 9,
-  "fields": {
-    "source": 7,
-    "destination": 8
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 10,
-  "fields": {
-    "source": 1,
-    "destination": 5
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 11,
-  "fields": {
-    "source": 3,
-    "destination": 6
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 12,
-  "fields": {
-    "source": 4,
-    "destination": 8
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 13,
-  "fields": {
-    "source": 9,
-    "destination": 11
-  }
-},
-{
-  "model": "network.edge",
-  "pk": 14,
-  "fields": {
-    "source": 7,
-    "destination": 10
-  }
-}
+  { "model": "network.node", "pk": 1,  "fields": { "location": "BITS Pilani" } },
+  { "model": "network.node", "pk": 3,  "fields": { "location": "B" } },
+  { "model": "network.node", "pk": 4,  "fields": { "location": "C" } },
+  { "model": "network.node", "pk": 5,  "fields": { "location": "D" } },
+  { "model": "network.node", "pk": 6,  "fields": { "location": "E" } },
+  { "model": "network.node", "pk": 7,  "fields": { "location": "F" } },
+  { "model": "network.node", "pk": 8,  "fields": { "location": "G" } },
+  { "model": "network.node", "pk": 9,  "fields": { "location": "H" } },
+  { "model": "network.node", "pk": 10, "fields": { "location": "I" } },
+  { "model": "network.node", "pk": 11, "fields": { "location": "J" } },
+  { "model": "network.node", "pk": 12, "fields": { "location": "NH-52 Pilani Toll" } },
+  { "model": "network.node", "pk": 13, "fields": { "location": "Sikar Road Junction" } },
+  { "model": "network.node", "pk": 14, "fields": { "location": "Loharu Road Fork" } },
+  { "model": "network.node", "pk": 15, "fields": { "location": "Jhunjhunu Bus Stand" } },
+  { "model": "network.node", "pk": 16, "fields": { "location": "Jhunjhunu Railway Station" } },
+  { "model": "network.node", "pk": 17, "fields": { "location": "Chirawa Town Center" } },
+  { "model": "network.node", "pk": 18, "fields": { "location": "Chirawa Highway Junction" } },
+  { "model": "network.node", "pk": 19, "fields": { "location": "Nawalgarh Chowk" } },
+  { "model": "network.node", "pk": 20, "fields": { "location": "Bissau Town" } },
+  { "model": "network.node", "pk": 21, "fields": { "location": "Surajgarh Chowk" } },
+
+  { "model": "network.edge", "pk": 1,  "fields": { "source": 1,  "destination": 3  } },
+  { "model": "network.edge", "pk": 2,  "fields": { "source": 3,  "destination": 4  } },
+  { "model": "network.edge", "pk": 3,  "fields": { "source": 4,  "destination": 5  } },
+  { "model": "network.edge", "pk": 4,  "fields": { "source": 5,  "destination": 6  } },
+  { "model": "network.edge", "pk": 5,  "fields": { "source": 6,  "destination": 7  } },
+  { "model": "network.edge", "pk": 6,  "fields": { "source": 8,  "destination": 9  } },
+  { "model": "network.edge", "pk": 7,  "fields": { "source": 9,  "destination": 11 } },
+  { "model": "network.edge", "pk": 8,  "fields": { "source": 10, "destination": 11 } },
+  { "model": "network.edge", "pk": 9,  "fields": { "source": 7,  "destination": 8  } },
+  { "model": "network.edge", "pk": 10, "fields": { "source": 1,  "destination": 5  } },
+  { "model": "network.edge", "pk": 11, "fields": { "source": 3,  "destination": 6  } },
+  { "model": "network.edge", "pk": 12, "fields": { "source": 4,  "destination": 8  } },
+  { "model": "network.edge", "pk": 13, "fields": { "source": 9,  "destination": 11 } },
+  { "model": "network.edge", "pk": 14, "fields": { "source": 7,  "destination": 10 } },
+
+  { "model": "network.edge", "pk": 15, "fields": { "source": 1,  "destination": 12 } },
+  { "model": "network.edge", "pk": 16, "fields": { "source": 12, "destination": 1  } },
+  { "model": "network.edge", "pk": 17, "fields": { "source": 3,  "destination": 12 } },
+  { "model": "network.edge", "pk": 18, "fields": { "source": 12, "destination": 3  } },
+  { "model": "network.edge", "pk": 19, "fields": { "source": 5,  "destination": 13 } },
+  { "model": "network.edge", "pk": 20, "fields": { "source": 13, "destination": 5  } },
+  { "model": "network.edge", "pk": 21, "fields": { "source": 4,  "destination": 14 } },
+  { "model": "network.edge", "pk": 22, "fields": { "source": 14, "destination": 4  } },
+  { "model": "network.edge", "pk": 23, "fields": { "source": 7,  "destination": 12 } },
+  { "model": "network.edge", "pk": 24, "fields": { "source": 12, "destination": 7  } },
+  { "model": "network.edge", "pk": 25, "fields": { "source": 8,  "destination": 13 } },
+  { "model": "network.edge", "pk": 26, "fields": { "source": 13, "destination": 8  } },
+  { "model": "network.edge", "pk": 27, "fields": { "source": 12, "destination": 13 } },
+  { "model": "network.edge", "pk": 28, "fields": { "source": 13, "destination": 12 } },
+  { "model": "network.edge", "pk": 29, "fields": { "source": 12, "destination": 14 } },
+  { "model": "network.edge", "pk": 30, "fields": { "source": 14, "destination": 12 } },
+  { "model": "network.edge", "pk": 31, "fields": { "source": 13, "destination": 15 } },
+  { "model": "network.edge", "pk": 32, "fields": { "source": 15, "destination": 13 } },
+  { "model": "network.edge", "pk": 33, "fields": { "source": 14, "destination": 18 } },
+  { "model": "network.edge", "pk": 34, "fields": { "source": 18, "destination": 14 } },
+  { "model": "network.edge", "pk": 35, "fields": { "source": 15, "destination": 16 } },
+  { "model": "network.edge", "pk": 36, "fields": { "source": 16, "destination": 15 } },
+  { "model": "network.edge", "pk": 37, "fields": { "source": 15, "destination": 19 } },
+  { "model": "network.edge", "pk": 38, "fields": { "source": 19, "destination": 15 } },
+  { "model": "network.edge", "pk": 39, "fields": { "source": 16, "destination": 19 } },
+  { "model": "network.edge", "pk": 40, "fields": { "source": 19, "destination": 16 } },
+  { "model": "network.edge", "pk": 41, "fields": { "source": 18, "destination": 17 } },
+  { "model": "network.edge", "pk": 42, "fields": { "source": 17, "destination": 18 } },
+  { "model": "network.edge", "pk": 43, "fields": { "source": 17, "destination": 21 } },
+  { "model": "network.edge", "pk": 44, "fields": { "source": 21, "destination": 17 } },
+  { "model": "network.edge", "pk": 45, "fields": { "source": 18, "destination": 21 } },
+  { "model": "network.edge", "pk": 46, "fields": { "source": 21, "destination": 18 } },
+  { "model": "network.edge", "pk": 47, "fields": { "source": 19, "destination": 20 } },
+  { "model": "network.edge", "pk": 48, "fields": { "source": 20, "destination": 19 } },
+  { "model": "network.edge", "pk": 49, "fields": { "source": 20, "destination": 21 } },
+  { "model": "network.edge", "pk": 50, "fields": { "source": 21, "destination": 20 } },
+  { "model": "network.edge", "pk": 51, "fields": { "source": 20, "destination": 15 } },
+  { "model": "network.edge", "pk": 52, "fields": { "source": 15, "destination": 20 } },
+  { "model": "network.edge", "pk": 53, "fields": { "source": 6,  "destination": 15 } },
+  { "model": "network.edge", "pk": 54, "fields": { "source": 15, "destination": 6  } },
+  { "model": "network.edge", "pk": 55, "fields": { "source": 9,  "destination": 18 } },
+  { "model": "network.edge", "pk": 56, "fields": { "source": 18, "destination": 9  } },
+  { "model": "network.edge", "pk": 57, "fields": { "source": 11, "destination": 19 } },
+  { "model": "network.edge", "pk": 58, "fields": { "source": 19, "destination": 11 } },
+  { "model": "network.edge", "pk": 59, "fields": { "source": 10, "destination": 20 } },
+  { "model": "network.edge", "pk": 60, "fields": { "source": 20, "destination": 10 } }
 ]
