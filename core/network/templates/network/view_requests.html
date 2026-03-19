@@ -1,34 +1,162 @@
 <!DOCTYPE html>
-<html>
-<head><title>View Requests</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incoming Requests</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0e0e0e;
+      min-height: 100vh;
+      padding: 3rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #f5f5f5;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .trip-info {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .trip-info span {
+      color: rgba(255,255,255,0.75);
+      font-weight: 500;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 0.75rem;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .back:hover { color: rgba(255,255,255,0.6); }
+
+    .alert {
+      font-size: 13px;
+      color: #ff6b6b;
+      background: rgba(255,107,107,0.08);
+      border: 0.5px solid rgba(255,107,107,0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    thead th {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0 12px 10px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    }
+
+    tbody tr {
+      border-bottom: 0.5px solid rgba(255,255,255,0.05);
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+    tbody td {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      padding: 12px;
+    }
+
+    .btn {
+      height: 32px;
+      padding: 0 16px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      border-radius: 6px;
+      border: none;
+      background: #f0f0f0;
+      color: #0e0e0e;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.75; }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
 <body>
-    <h1>Incoming Carpool Requests</h1>
-    <p>Active Trip: {{ Active_Trip.start_node }} → {{ Active_Trip.end_node }}</p>
-    <a href="{% url 'driver_dashboard' %}">Back to Dashboard</a>
+  <div class="container">
+    <div class="header">
+      <p class="brand">Incoming Requests</p>
+      <p class="trip-info">Active trip: <span>{{ Active_Trip.start_node }} → {{ Active_Trip.end_node }}</span></p>
+      <a class="back" href="{% url 'driver_dashboard' %}">← Back to dashboard</a>
+    </div>
 
     {% if full %}
-        <p style="color:red;">Your trip is full, no more passengers can be added.</p>
+      <div class="alert">Your trip is full — no more passengers can be added.</div>
     {% elif Requests|length > 0 %}
-        <table border="1">
-            <tr>
-                <th>Passenger</th><th>Pickup</th><th>Dropoff</th><th>Action</th>
-            </tr>
-            {% for req in Requests %}
-            <tr>
-                <td>{{ req.passenger }}</td>
-                <td>{{ req.pickup_node.location }}</td>
-                <td>{{ req.dropoff_node.location }}</td>
-                <td>
-                    <form method="POST" action="{% url 'make_offer' Active_Trip.id req.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Make Offer</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Passenger</th>
+            <th>Pickup</th>
+            <th>Dropoff</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in Requests %}
+          <tr>
+            <td>{{ req.passenger }}</td>
+            <td>{{ req.pickup_node.location }}</td>
+            <td>{{ req.dropoff_node.location }}</td>
+            <td>
+              <form method="POST" action="{% url 'make_offer' Active_Trip.id req.id %}">
+                {% csrf_token %}
+                <button class="btn" type="submit">Make Offer</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
-        <p>No matching requests at the moment.</p>
+      <p class="empty">No matching requests at the moment.</p>
     {% endif %}
+  </div>
 </body>
 </html>
