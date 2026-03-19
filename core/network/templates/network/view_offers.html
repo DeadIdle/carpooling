@@ -1,37 +1,167 @@
 <!DOCTYPE html>
-<html>
-<head><title>View Offers</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Offers</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0e0e0e;
+      min-height: 100vh;
+      padding: 3rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #f5f5f5;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .route {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.75rem;
+    }
+
+    .route span {
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+    }
+
+    .back {
+      display: inline-block;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.15s;
+      margin-bottom: 2rem;
+    }
+
+    .back:hover { color: rgba(255,255,255,0.6); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0 12px 10px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    }
+
+    tbody tr {
+      border-bottom: 0.5px solid rgba(255,255,255,0.05);
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+    tbody td {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      padding: 14px 12px;
+      vertical-align: middle;
+    }
+
+    .driver { color: #f0f0f0; font-weight: 500; }
+    .fare { color: #f0f0f0; font-weight: 500; }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.4);
+    }
+
+    .confirm-btn {
+      height: 32px;
+      padding: 0 16px;
+      background: #f0f0f0;
+      color: #0e0e0e;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .confirm-btn:hover { opacity: 0.85; }
+    .confirm-btn:active { opacity: 0.7; }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
 <body>
-    <h1>Offers for your Request</h1>
-    <p>Pickup: {{ carp_request.pickup_node }} → Dropoff: {{ carp_request.dropoff_node }}</p>
+  <div class="container">
+    <p class="brand">Offers</p>
+    <p class="route">
+      <span>{{ carp_request.pickup_node }}</span>
+      <span style="color:rgba(255,255,255,0.25);margin:0 6px;">→</span>
+      <span>{{ carp_request.dropoff_node }}</span>
+    </p>
+    <a class="back" href="{% url 'passenger_dashboard' %}">← Back to dashboard</a>
 
     {% if Offers %}
-        <table border="1">
-            <tr>
-                <th>Driver</th><th>Fare</th><th>Detour Nodes</th><th>Action</th>
-            </tr>
-            {% for offer in Offers %}
-            <tr>
-                <td>{{ offer.trip.driver.username }}</td>
-                <td>₹{{ offer.fare }}</td>
-                <td>{{ offer.detour_nodes }}</td>
-                <td>
-                    {% if offer.status == 'PENDING' %}
-                        <form method="POST" action="{% url 'confirm_offer' carp_request.id offer.id %}">
-                            {% csrf_token %}
-                            <button type="submit">Confirm</button>
-                        </form>
-                    {% else %}
-                        {{ offer.status }}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Driver</th>
+            <th>Fare</th>
+            <th>Detour nodes</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for offer in Offers %}
+          <tr>
+            <td class="driver">{{ offer.trip.driver.username }}</td>
+            <td class="fare">₹{{ offer.fare }}</td>
+            <td>{{ offer.detour_nodes }}</td>
+            <td>
+              {% if offer.status == 'PENDING' %}
+                <form method="POST" action="{% url 'confirm_offer' carp_request.id offer.id %}">
+                  {% csrf_token %}
+                  <button class="confirm-btn" type="submit">Confirm</button>
+                </form>
+              {% else %}
+                <span class="status-badge">{{ offer.status }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
-        <p>No offers yet. Check back later!</p>
+      <p class="empty">No offers yet — check back later.</p>
     {% endif %}
-
-    <a href="{% url 'passenger_dashboard' %}">Back</a>
+  </div>
 </body>
 </html>

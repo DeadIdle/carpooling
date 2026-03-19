@@ -1,17 +1,126 @@
 <!DOCTYPE html>
-<html>
-<head><title>Top Up Wallet</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Up Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0e0e0e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: #161616;
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #f5f5f5;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .balance {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 2rem;
+    }
+
+    .balance span {
+      color: rgba(255,255,255,0.75);
+      font-weight: 500;
+    }
+
+    .field { margin-bottom: 1.25rem; }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: #1e1e1e;
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #f0f0f0;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input::placeholder { color: rgba(255,255,255,0.2); }
+    input:focus { border-color: rgba(255,255,255,0.3); }
+
+    .btn {
+      width: 100%;
+      height: 44px;
+      margin-top: 0.5rem;
+      background: #f0f0f0;
+      color: #0e0e0e;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.88; }
+    .btn:active { opacity: 0.75; }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .back:hover { color: rgba(255,255,255,0.6); }
+  </style>
+</head>
 <body>
-    <h1>Top Up Wallet</h1>
-    <p>Current Balance: ₹{{ request.user.wallet_balance }}</p>
+  <div class="card">
+    <p class="brand">Top up</p>
+    <p class="balance">Current balance: <span>₹{{ request.user.wallet_balance }}</span></p>
 
     <form method="POST">
-        {% csrf_token %}
-        <label>Amount:</label>
-        <input type="number" name="amount" min="1" step="0.01" required>
-        <button type="submit">Top Up</button>
+      {% csrf_token %}
+      <div class="field">
+        <label for="amount">Amount (₹)</label>
+        <input type="number" id="amount" name="amount" min="1" step="0.01" placeholder="Enter amount" required>
+      </div>
+      <button class="btn" type="submit">Add to wallet</button>
     </form>
 
-    <a href="{% url 'passenger_dashboard' %}">Back to Dashboard</a>
+    <a class="back" href="{% url 'passenger_dashboard' %}">← Back to dashboard</a>
+  </div>
 </body>
 </html>

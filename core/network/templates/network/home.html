@@ -1,9 +1,82 @@
 <!DOCTYPE html>
-<html>
-<head><title>TaxiRide</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxiRide</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0e0e0e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .center { text-align: center; }
+
+    .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 42px;
+      color: #f5f5f5;
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 3rem;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn {
+      height: 42px;
+      padding: 0 28px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary {
+      background: #f0f0f0;
+      color: #0e0e0e;
+      border: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      border: 0.5px solid rgba(255,255,255,0.1);
+    }
+
+    .btn:hover { opacity: 0.75; }
+  </style>
+</head>
 <body>
-    <h1>Welcome to TaxiRide</h1>
-    <a href="{% url 'login' %}">Login</a> |
-    <a href="{% url 'register' %}">Register</a>
+  <div class="center">
+    <p class="brand">TaxiRide</p>
+    <p class="tagline">Smart carpooling, simplified.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="{% url 'login' %}">Sign in</a>
+      <a class="btn btn-ghost" href="{% url 'register' %}">Register</a>
+    </div>
+  </div>
 </body>
 </html>

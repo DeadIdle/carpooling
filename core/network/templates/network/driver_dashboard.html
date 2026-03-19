@@ -1,64 +1,241 @@
 <!DOCTYPE html>
-<html>
-<head><title>Driver Dashboard</title></head>
-<body>
-    <h1>Driver Dashboard</h1>
-    <p>Welcome, {{ request.user.username }}!</p>
-    <a href="{% url 'create_trip' %}">+ New Trip</a> |
-    <a href="{% url 'logout' %}">Logout</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <h2>Active Trips</h2>
-    {% if active_trips %}
-        <table border="1">
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0e0e0e;
+      min-height: 100vh;
+      padding: 3rem 1rem;
+    }
+
+    .container { width: 100%; max-width: 820px; margin: 0 auto; }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #f5f5f5;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .welcome { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .welcome span { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+    .nav { display: flex; align-items: center; gap: 8px; }
+
+    .nav-btn {
+      height: 34px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-btn.primary { background: #f0f0f0; color: #0e0e0e; border: none; }
+    .nav-btn.danger { background: transparent; color: rgba(255,100,100,0.7); border: 0.5px solid rgba(255,100,100,0.15); }
+    .nav-btn:hover { opacity: 0.75; }
+
+    .section { margin-bottom: 2.5rem; }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead th {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0 10px 8px;
+    }
+
+    tbody tr {
+      border-bottom: 0.5px solid rgba(255,255,255,0.04);
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+    tbody td {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      padding: 13px 10px;
+      vertical-align: middle;
+    }
+
+    .td-id { color: rgba(255,255,255,0.25); font-size: 12px; }
+    .td-main { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.4);
+    }
+
+    .actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    .action-link {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+
+    .action-link:hover { color: rgba(255,255,255,0.8); }
+
+    .action-link.cancel { color: rgba(255,100,100,0.5); }
+    .action-link.cancel:hover { color: rgba(255,100,100,0.9); }
+
+    .move-btn {
+      height: 28px;
+      padding: 0 12px;
+      font-size: 11px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .move-btn:hover { background: rgba(255,255,255,0.14); color: #f0f0f0; }
+
+    .final-node {
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      font-style: italic;
+    }
+
+    .empty {
+      font-size: 13px;
+      color: rgba(255,255,255,0.2);
+      padding: 1.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <div>
+        <p class="brand">Driver Dashboard</p>
+        <p class="welcome">Welcome back, <span>{{ request.user.username }}</span></p>
+      </div>
+      <div class="nav">
+        <a class="nav-btn primary" href="{% url 'create_trip' %}">+ New trip</a>
+        <a class="nav-btn danger" href="{% url 'logout' %}">Logout</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="section-title">Active trips</p>
+      {% if active_trips %}
+        <table>
+          <thead>
             <tr>
-                <th>ID</th><th>From</th><th>To</th><th>Current Node</th><th>Status</th><th>Max Passengers</th><th>Actions</th>
+              <th>ID</th><th>From</th><th>To</th><th>Current node</th><th>Status</th><th>Max pax</th><th>Actions</th>
             </tr>
+          </thead>
+          <tbody>
             {% for trip in active_trips %}
             <tr>
-                <td>{{ trip.id }}</td>
-                <td>{{ trip.start_node }}</td>
-                <td>{{ trip.end_node }}</td>
-                <td>{{ trip.current_node }}</td>
-                <td>{{ trip.status }}</td>
-                <td>{{ trip.max_passengers }}</td>
-                <td>
-                    {% if trip.status == 'PLANNED' %}
-                        <a href="{% url 'cancel_trip' trip.id %}">Cancel</a> |
-                    {% endif %}
-                    <a href="{% url 'view_requests' trip.id %}">View Requests</a> |
-                    {% if trip.next_node %}
-                        <form method="POST" action="{% url 'update_current_node' trip.id trip.next_node %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit">Move to Next Node</button>
-                        </form>
-                    {% else %}
-                        <span>At final node</span>
-                    {% endif %}
-                </td>
+              <td class="td-id">#{{ trip.id }}</td>
+              <td class="td-main">{{ trip.start_node }}</td>
+              <td>{{ trip.end_node }}</td>
+              <td>{{ trip.current_node }}</td>
+              <td><span class="status-badge">{{ trip.status }}</span></td>
+              <td>{{ trip.max_passengers }}</td>
+              <td>
+                <div class="actions">
+                  {% if trip.status == 'PLANNED' %}
+                    <a class="action-link cancel" href="{% url 'cancel_trip' trip.id %}">Cancel</a>
+                  {% endif %}
+                  <a class="action-link" href="{% url 'view_requests' trip.id %}">View requests</a>
+                  {% if trip.next_node %}
+                    <form method="POST" action="{% url 'update_current_node' trip.id trip.next_node %}">
+                      {% csrf_token %}
+                      <button class="move-btn" type="submit">Move to next</button>
+                    </form>
+                  {% else %}
+                    <span class="final-node">At final node</span>
+                  {% endif %}
+                </div>
+              </td>
             </tr>
             {% endfor %}
+          </tbody>
         </table>
-    {% else %}
-        <p>No active trips.</p>
-    {% endif %}
+      {% else %}
+        <p class="empty">No active trips.</p>
+      {% endif %}
+    </div>
 
-    <h2>Past Trips</h2>
-    {% if past_trips %}
-        <table border="1">
+    <div class="section">
+      <p class="section-title">Past trips</p>
+      {% if past_trips %}
+        <table>
+          <thead>
             <tr>
-                <th>ID</th><th>From</th><th>To</th><th>Status</th>
+              <th>ID</th><th>From</th><th>To</th><th>Status</th>
             </tr>
+          </thead>
+          <tbody>
             {% for trip in past_trips %}
             <tr>
-                <td>{{ trip.id }}</td>
-                <td>{{ trip.start_node }}</td>
-                <td>{{ trip.end_node }}</td>
-                <td>{{ trip.status }}</td>
+              <td class="td-id">#{{ trip.id }}</td>
+              <td class="td-main">{{ trip.start_node }}</td>
+              <td>{{ trip.end_node }}</td>
+              <td><span class="status-badge">{{ trip.status }}</span></td>
             </tr>
             {% endfor %}
+          </tbody>
         </table>
-    {% else %}
-        <p>No past trips.</p>
-    {% endif %}
+      {% else %}
+        <p class="empty">No past trips.</p>
+      {% endif %}
+    </div>
+
+  </div>
 </body>
 </html>

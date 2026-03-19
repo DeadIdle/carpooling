@@ -1,75 +1,286 @@
 <!DOCTYPE html>
-<html>
-<head><title>Passenger Dashboard</title></head>
-<body>
-    <h1>Passenger Dashboard</h1>
-    <p>Welcome, {{ request.user.username }}!</p>
-    <p>Wallet Balance: ₹{{ request.user.wallet_balance }}</p>
-    <a href="{% url 'topup_wallet' %}">+ Top Up Wallet</a> |
-    <a href="{% url 'create_request' %}">+ New Request</a> |
-    <a href="{% url 'logout' %}">Logout</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Passenger Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <h2>Active Requests</h2>
-    {% if Ongoing_trips %}
-        <table border="1">
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0e0e0e;
+      min-height: 100vh;
+      padding: 3rem 1rem;
+    }
+
+    .container { width: 100%; max-width: 720px; margin: 0 auto; }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #f5f5f5;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .welcome {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .welcome span { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+    .nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .nav-btn {
+      height: 34px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-btn.primary {
+      background: #f0f0f0;
+      color: #0e0e0e;
+      border: none;
+    }
+
+    .nav-btn.ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      border: 0.5px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-btn.danger {
+      background: transparent;
+      color: rgba(255,100,100,0.7);
+      border: 0.5px solid rgba(255,100,100,0.15);
+    }
+
+    .nav-btn:hover { opacity: 0.75; }
+
+    .wallet {
+      width: 100%;
+      background: #161616;
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .wallet-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.3); font-weight: 500; margin-bottom: 4px; }
+    .wallet-amount { font-size: 20px; color: #f0f0f0; font-weight: 500; }
+
+    .section { margin-bottom: 2.5rem; }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead th {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0 10px 8px;
+    }
+
+    tbody tr {
+      border-bottom: 0.5px solid rgba(255,255,255,0.04);
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+    tbody td {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      padding: 12px 10px;
+      vertical-align: middle;
+    }
+
+    .td-id { color: rgba(255,255,255,0.25); font-size: 12px; }
+    .td-main { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.4);
+    }
+
+    .actions { display: flex; align-items: center; gap: 8px; }
+
+    .action-link {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .action-link:hover { color: rgba(255,255,255,0.8); }
+
+    .cancel-btn {
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      color: rgba(255,100,100,0.6);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .cancel-btn:hover { color: rgba(255,100,100,0.9); }
+
+    .empty {
+      font-size: 13px;
+      color: rgba(255,255,255,0.2);
+      padding: 1.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <div>
+        <p class="brand">Dashboard</p>
+        <p class="welcome">Welcome back, <span>{{ request.user.username }}</span></p>
+      </div>
+      <div class="nav">
+        <a class="nav-btn primary" href="{% url 'create_request' %}">+ New request</a>
+        <a class="nav-btn ghost" href="{% url 'topup_wallet' %}">Top up</a>
+        <a class="nav-btn danger" href="{% url 'logout' %}">Logout</a>
+      </div>
+    </div>
+
+    <div class="wallet">
+      <div>
+        <p class="wallet-label">Wallet balance</p>
+        <p class="wallet-amount">₹{{ request.user.wallet_balance }}</p>
+      </div>
+      <a class="nav-btn ghost" href="{% url 'transaction_history' %}">View history</a>
+    </div>
+
+    <div class="section">
+      <p class="section-title">Active requests</p>
+      {% if Ongoing_trips %}
+        <table>
+          <thead>
             <tr>
-                <th>ID</th><th>Pickup</th><th>Dropoff</th><th>Status</th><th>Actions</th>
+              <th>ID</th><th>Pickup</th><th>Dropoff</th><th>Status</th><th>Actions</th>
             </tr>
+          </thead>
+          <tbody>
             {% for req in Ongoing_trips %}
             <tr>
-                <td>{{ req.id }}</td>
-                <td>{{ req.pickup_node }}</td>
-                <td>{{ req.dropoff_node }}</td>
-                <td>{{ req.status }}</td>
-                <td>
-                    <a href="{% url 'view_offers' req.id %}">View Offers</a> |
-                    <form method="POST" action="{% url 'cancel_request' req.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit">Cancel</button>
-                    </form>
-                </td>
+              <td class="td-id">#{{ req.id }}</td>
+              <td class="td-main">{{ req.pickup_node }}</td>
+              <td>{{ req.dropoff_node }}</td>
+              <td><span class="status-badge">{{ req.status }}</span></td>
+              <td>
+                <div class="actions">
+                  <a class="action-link" href="{% url 'view_offers' req.id %}">View offers</a>
+                  <form method="POST" action="{% url 'cancel_request' req.id %}">
+                    {% csrf_token %}
+                    <button class="cancel-btn" type="submit">Cancel</button>
+                  </form>
+                </div>
+              </td>
             </tr>
             {% endfor %}
+          </tbody>
         </table>
-    {% else %}
-        <p>No active requests.</p>
-    {% endif %}
+      {% else %}
+        <p class="empty">No active requests.</p>
+      {% endif %}
+    </div>
 
-    <h2>Past Requests</h2>
-    {% if Past_trips %}
-        <table border="1">
+    <div class="section">
+      <p class="section-title">Past requests</p>
+      {% if Past_trips %}
+        <table>
+          <thead>
             <tr>
-                <th>ID</th><th>Pickup</th><th>Dropoff</th><th>Status</th>
+              <th>ID</th><th>Pickup</th><th>Dropoff</th><th>Status</th>
             </tr>
+          </thead>
+          <tbody>
             {% for req in Past_trips %}
             <tr>
-                <td>{{ req.id }}</td>
-                <td>{{ req.pickup_node }}</td>
-                <td>{{ req.dropoff_node }}</td>
-                <td>{{ req.status }}</td>
+              <td class="td-id">#{{ req.id }}</td>
+              <td class="td-main">{{ req.pickup_node }}</td>
+              <td>{{ req.dropoff_node }}</td>
+              <td><span class="status-badge">{{ req.status }}</span></td>
             </tr>
             {% endfor %}
+          </tbody>
         </table>
-    {% else %}
-        <p>No past requests.</p>
-    {% endif %}
+      {% else %}
+        <p class="empty">No past requests.</p>
+      {% endif %}
+    </div>
 
-    <h2>Cancelled Requests</h2>
-    {% if Cancelled_trips %}
-        <table border="1">
+    <div class="section">
+      <p class="section-title">Cancelled requests</p>
+      {% if Cancelled_trips %}
+        <table>
+          <thead>
             <tr>
-                <th>ID</th><th>Pickup</th><th>Dropoff</th>
+              <th>ID</th><th>Pickup</th><th>Dropoff</th>
             </tr>
+          </thead>
+          <tbody>
             {% for req in Cancelled_trips %}
             <tr>
-                <td>{{ req.id }}</td>
-                <td>{{ req.pickup_node }}</td>
-                <td>{{ req.dropoff_node }}</td>
+              <td class="td-id">#{{ req.id }}</td>
+              <td class="td-main">{{ req.pickup_node }}</td>
+              <td>{{ req.dropoff_node }}</td>
             </tr>
             {% endfor %}
+          </tbody>
         </table>
-    {% else %}
-        <p>No cancelled requests.</p>
-    {% endif %}
+      {% else %}
+        <p class="empty">No cancelled requests.</p>
+      {% endif %}
+    </div>
+
+  </div>
 </body>
 </html>
