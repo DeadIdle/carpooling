@@ -120,9 +120,10 @@
     }
 
     .action-link:hover { color: rgba(255,255,255,0.8); }
-
     .action-link.cancel { color: rgba(255,100,100,0.5); }
     .action-link.cancel:hover { color: rgba(255,100,100,0.9); }
+    .action-link.review { color: rgba(240,192,64,0.6); }
+    .action-link.review:hover { color: rgba(240,192,64,1); }
 
     .move-btn {
       height: 28px;
@@ -217,7 +218,7 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th><th>From</th><th>To</th><th>Status</th>
+              <th>ID</th><th>From</th><th>To</th><th>Status</th><th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -227,6 +228,11 @@
               <td class="td-main">{{ trip.start_node }}</td>
               <td>{{ trip.end_node }}</td>
               <td><span class="status-badge">{{ trip.status }}</span></td>
+              <td>
+                {% if trip.status == 'COMPLETED' %}
+                  <a class="action-link review" href="{% url 'submit_review' trip.id %}">★ Leave review</a>
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           </tbody>

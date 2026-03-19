@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0e0e0e;
+      min-height: 100vh;
+      padding: 3rem 1rem;
+    }
+
+    .container { width: 100%; max-width: 600px; margin: 0 auto; }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 2rem;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .back:hover { color: rgba(255,255,255,0.6); }
+
+    /* Profile card */
+    .profile-card {
+      background: rgba(255,255,255,0.03);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .profile-info {}
+
+    .profile-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #f5f5f5;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .rating-block {
+      text-align: right;
+    }
+
+    .rating-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 40px;
+      color: #f0c040;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .rating-stars {
+      font-size: 14px;
+      color: rgba(240,192,64,0.5);
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .rating-count {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* Reviews */
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+
+    .review-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .review-item {
+      background: rgba(255,255,255,0.02);
+      border: 0.5px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .review-author {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+    }
+
+    .review-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .review-stars {
+      font-size: 13px;
+      color: #f0c040;
+      letter-spacing: 1px;
+    }
+
+    .review-date {
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .review-comment {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .no-comment {
+      font-size: 12px;
+      color: rgba(255,255,255,0.15);
+      font-style: italic;
+    }
+
+    .empty {
+      font-size: 13px;
+      color: rgba(255,255,255,0.2);
+      padding: 1.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <a class="back" href="{% url 'driver_dashboard' %}">← Back to dashboard</a>
+
+    <div class="profile-card">
+      <div class="profile-info">
+        <p class="profile-name">{{ Driver.username }}</p>
+        <p class="profile-meta">Driver · member since {{ Driver.date_joined|date:"M Y" }}</p>
+      </div>
+      <div class="rating-block">
+        {% if Average_rating %}
+          <p class="rating-number">{{ Average_rating|floatformat:1 }}</p>
+          <p class="rating-stars">
+            {% for i in "12345" %}
+              {% if forloop.counter <= Average_rating %}★{% else %}☆{% endif %}
+            {% endfor %}
+          </p>
+          <p class="rating-count">{{ Reviews.count }} review{{ Reviews.count|pluralize }}</p>
+        {% else %}
+          <p class="rating-number" style="color:rgba(255,255,255,0.15);">—</p>
+          <p class="rating-count">No reviews yet</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="section-title">Reviews</div>
+
+    {% if Reviews %}
+      <div class="review-list">
+        {% for review in Reviews %}
+        <div class="review-item">
+          <div class="review-header">
+            <span class="review-author">{{ review.reviewer.username }}</span>
+            <div class="review-meta">
+              <span class="review-stars">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                {% endfor %}
+              </span>
+              <span class="review-date">{{ review.created_at|date:"d M Y" }}</span>
+            </div>
+          </div>
+          {% if review.comment %}
+            <p class="review-comment">"{{ review.comment }}"</p>
+          {% else %}
+            <p class="no-comment">No comment left.</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty">No reviews yet.</p>
+    {% endif %}
+
+  </div>
+</body>
+</html>

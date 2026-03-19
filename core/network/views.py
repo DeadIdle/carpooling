@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Node, User, Trip, CarpoolRequest, CarpoolOffer, Transaction
+from .models import Node, User, Trip, CarpoolRequest, CarpoolOffer, Transaction, Review
 from .utils import get_roadmap, calculate_detour, calculate_fare, get_nodes_within_distance
 from .bfs import find_shortest_path
 import requests as http_requests
 from decimal import Decimal
+from django.db.models import Avg
 def home(request):
     if request.user.is_authenticated:
         if request.user.role == 'DR':
@@ -301,6 +302,7 @@ def transaction_history(request):
 
 @login_required
 def update_current_node(request, trip_id, node_id):
+
     if request.user.role != 'DR':
         return redirect('passenger_dashboard')
     if request.method == 'POST':
@@ -315,3 +317,36 @@ def update_current_node(request, trip_id, node_id):
             trip.status = 'COMPLETED'
         trip.save()
     return redirect('driver_dashboard')
+
+@login_required
+def submit_review(request, trip_id):
+    trip = Trip.objects.get(id = trip_id)
+    if request.user.role in ['DR', 'PS'] and trip.status == 'COMPLETED':
+        if Review.objects.filter(reviewer = request.user, trip = trip).exists():
+            messages.error(request, 'You have already reviewed this trip.')
+            return redirect('passenger_dashboard')
+        else :
+            if request.method == 'POST':
+                rating = int(request.POST.get('rating'))
+                comment = request.POST.get('comment')
+                Review.objects.create(
+                    reviewer = request.user,
+                    reviewee = trip.driver if request.user.role == 'PS' else CarpoolOffer.objects.get(trip=trip, status='ACCEPTED').carpool_request.passenger, 
+                    rating = rating,
+                    comment = comment,
+                    trip = trip,
+
+                )
+                return redirect('passenger_dashboard' if request.user.role == 'PS' else 'driver_dashboard' )
+                
+            else :
+                return render(request, 'network/submit_review.html', {'trip': trip})
+
+@login_required
+def driver_profile(request,user_id):
+        user = User.objects.get(id = user_id)
+        reviews = Review.objects.filter(reviewee = user)
+        avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+        return render(request, 'network/driver_profile.html', {'Driver' : user,
+                                                                 'Reviews' : reviews,
+                                                                 'Average_rating' :avg_rating })

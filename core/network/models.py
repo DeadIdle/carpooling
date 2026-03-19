@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -115,3 +115,14 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f'{self.transaction_type} of {self.amount} for {self.user.username}'
+
+
+class Review(models.Model):
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews_given')
+    reviewee = models.ForeignKey(User, on_delete = models.CASCADE, related_name='reviews_recieved')
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=255, blank=True)
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ('reviewer', 'trip')

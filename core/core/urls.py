@@ -23,5 +23,8 @@ urlpatterns = [
     path('passenger/wallet/topup/', views.topup_wallet, name='topup_wallet'),
     path('wallet/transactions/', views.transaction_history, name='transaction_history'),
     path('driver/trip/<int:trip_id>/update_node/<int:node_id>/', views.update_current_node, name='update_current_node'),
+    path('trip/<int:trip_id>/review/', views.submit_review, name='submit_review'),
+    path('trip/<int:trip_id>/review/', views.submit_review, name='submit_review'),
+    path('driver/<int:user_id>/profile/', views.driver_profile, name='driver_profile'),
     
 ]
