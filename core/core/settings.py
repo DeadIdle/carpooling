@@ -14,12 +14,12 @@ from dotenv import load_dotenv
 import os
 
 # Allow your domain and localhost
-ALLOWED_HOSTS = ['13.201.30.212','carpooling.mooo.com']  # we'll restrict this to your domain later
+ALLOWED_HOSTS = ['carpooling.mooo.com', '35.154.115.57']  # we'll restrict this to your domain later
 
 
 
 # Security settings (for production)
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'https://carpooling.mooo.com']
 
 load_dotenv(r'C:\Users\Amogh\dvm\.env')
 
