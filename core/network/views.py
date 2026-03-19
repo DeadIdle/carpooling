@@ -313,8 +313,10 @@ def update_current_node(request, trip_id, node_id):
         trip.passed_nodes += f',{node_id}'
         if trip.status == 'PLANNED':
             trip.status = 'ONGOING'
-        if trip.current_node == trip.end_node:
-            trip.status = 'COMPLETED'
+            if trip.current_node == trip.end_node:
+                trip.status = 'COMPLETED'
+                accepted_requests = CarpoolOffer.objects.filter(trip=trip, status='ACCEPTED').values_list('carpool_request_id', flat=True)
+                CarpoolRequest.objects.filter(id__in=accepted_requests).update(status='COMPLETED')
         trip.save()
     return redirect('driver_dashboard')
 
