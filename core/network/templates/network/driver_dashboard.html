@@ -165,6 +165,7 @@
       </div>
       <div class="nav">
         <a class="nav-btn primary" href="{% url 'create_trip' %}">+ New trip</a>
+        <a class="nav-btn ghost" href="{% url 'driver_profile' request.user.id %}">My Profile</a>
         <a class="nav-btn danger" href="{% url 'logout' %}">Logout</a>
       </div>
     </div>
