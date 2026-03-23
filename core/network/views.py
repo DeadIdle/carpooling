@@ -401,6 +401,8 @@ def passenger_confirm_dropoff(request, offer_id):
     if offer.carpool_request.passenger == request.user and offer.driver_confirming_dropped_off == True:
         offer.passenger_confirming_dropped_off = True
         offer.save()
+        offer.carpool_request.status = 'COMPLETED'
+        offer.carpool_request.save()
     return redirect('passenger_dashboard')
 
 
