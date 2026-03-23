@@ -33,19 +33,5 @@ class Migration(migrations.Migration):
             name='passenger_confirming_dropped_off',
             field=models.BooleanField(default=False),
         ),
-        migrations.CreateModel(
-            name='Review',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment', models.TextField(blank=True, max_length=255)),
-                ('rating', models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(5)])),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('reviewee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews_recieved', to=settings.AUTH_USER_MODEL)),
-                ('reviewer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews_given', to=settings.AUTH_USER_MODEL)),
-                ('trip', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='network.trip')),
-            ],
-            options={
-                'unique_together': {('reviewer', 'trip')},
-            },
-        ),
+        
     ]
