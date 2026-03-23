@@ -378,7 +378,7 @@ def driver_confirm_boarding(request, offer_id):
 
     offer = get_object_or_404(CarpoolOffer, id=offer_id)
     if offer.passenger_boarded == True and offer.trip.driver == request.user:
-        offer.driver_confirm_boarding = True
+        offer.driver_confirmed_boarding = True
         offer.save()
     return redirect('driver_dashboard')
 
