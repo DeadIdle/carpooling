@@ -96,6 +96,11 @@ class CarpoolOffer(models.Model):
     detour_nodes = models.IntegerField(default=0)
     fare = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    passenger_boarded = models.BooleanField(default=False)
+    driver_confirmed_boarding = models.BooleanField(default = False)
+    passenger_confirming_dropped_off = models.BooleanField(default = False)
+    driver_confirming_dropped_off = models.BooleanField(default = False)
+
 
     def __str__(self):
         return f'Offer from {self.trip.driver.username} for {self.carpool_request}'

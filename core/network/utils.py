@@ -35,7 +35,7 @@ def calculate_detour(road_map, remaining_route, pickup_id, dropoff_id):
     original_len = len(remaining_route) - 1  # hops
 
     for i in range(len(remaining_route)):
-        # Try inserting pickup at position i
+        
         path_to_pickup, _ = find_shortest_path(road_map, remaining_route[i], pickup_id)
         if not path_to_pickup:
             continue
@@ -80,7 +80,6 @@ def calculate_fare(road_map, new_route, pickup_id, dropoff_id, existing_passenge
     fare = base_fee
     for k in range(len(passenger_hops) - 1):
         node = passenger_hops[k]
-        # Count passengers in car at this hop (including new passenger)
         n_i = 1
         for p_pickup, p_dropoff in existing_passengers:
             if p_pickup in new_route and p_dropoff in new_route:

@@ -8,6 +8,9 @@ from .bfs import find_shortest_path
 import requests as http_requests
 from decimal import Decimal
 from django.db.models import Avg
+from django.shortcuts import get_object_or_404
+
+
 def home(request):
     if request.user.is_authenticated:
         if request.user.role == 'DR':
@@ -353,3 +356,51 @@ def driver_profile(request,user_id):
         return render(request, 'network/driver_profile.html', {'Driver' : user,
                                                                  'Reviews' : reviews,
                                                                  'Average_rating' :avg_rating })
+
+@login_required
+def passenger_confirms_boarding(request,offer_id):
+    if request.user.role != 'PS':
+        return redirect('driver_dashboard')
+    offer = get_object_or_404(CarpoolOffer, id=offer_id)
+    if offer.carpool_request.passenger != request.user:
+        return redirect('passenger_dashboard')
+    
+        
+    if not offer.passenger_boarded:
+        offer.passenger_boarded = True
+        offer.save()
+    return redirect('passenger_dashboard')
+
+@login_required
+def driver_confirm_boarding(request, offer_id):
+    if request.user.role!= 'DR':
+        return redirect('passenger_dashboard')
+
+    offer = get_object_or_404(CarpoolOffer, id=offer_id)
+    if offer.passenger_boarded == True and offer.trip.driver == request.user:
+        offer.driver_confirm_boarding = True
+        offer.save()
+    return redirect('driver_dashboard')
+
+@login_required
+def driver_confirm_dropoff(request, offer_id):
+    if request.user.role != 'DR':
+        return redirect('passenger_dashboard')
+    offer = get_object_or_404(CarpoolOffer, id = offer_id)
+    if offer.trip.driver == request.user and offer.driver_confirmed_boarding == True:
+        offer.driver_confirming_dropped_off = True
+        offer.save()
+    return redirect('driver_dashboard')
+
+
+@login_required
+def passenger_confirm_dropoff(request, offer_id):
+    if request.user.role != 'PS':
+        return redirect('driver_dashboard')
+    offer = get_object_or_404(CarpoolOffer, id = offer_id)
+    if offer.carpool_request.passenger == request.user and offer.driver_confirming_dropped_off == True:
+        offer.passenger_confirming_dropped_off = True
+        offer.save()
+    return redirect('passenger_dashboard')
+
+

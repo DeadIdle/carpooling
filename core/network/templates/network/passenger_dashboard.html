@@ -144,7 +144,7 @@
       color: rgba(255,255,255,0.4);
     }
 
-    .actions { display: flex; align-items: center; gap: 8px; }
+    .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
     .action-link {
       font-size: 12px;
@@ -220,6 +220,22 @@
               <td>
                 <div class="actions">
                   <a class="action-link" href="{% url 'view_offers' req.id %}">View offers</a>
+                  {% for offer in req.offers.all %}
+                    {% if offer.status == 'ACCEPTED' %}
+                      {% if not offer.passenger_boarded %}
+                        <form method="POST" action="{% url 'passenger_confirm_boarding' offer.id %}">
+                          {% csrf_token %}
+                          <button class="nav-btn primary" type="submit">I have boarded</button>
+                        </form>
+                      {% endif %}
+                      {% if offer.driver_confirming_dropped_off and not offer.passenger_confirming_dropped_off %}
+                        <form method="POST" action="{% url 'passenger_confirm_dropoff' offer.id %}">
+                          {% csrf_token %}
+                          <button class="nav-btn primary" type="submit">Confirm dropoff</button>
+                        </form>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
                   <form method="POST" action="{% url 'cancel_request' req.id %}">
                     {% csrf_token %}
                     <button class="cancel-btn" type="submit">Cancel</button>
@@ -252,13 +268,11 @@
               <td>{{ req.dropoff_node }}</td>
               <td><span class="status-badge">{{ req.status }}</span></td>
               <td>
-                {% if req.status == 'COMPLETED' %}
-                  {% for offer in req.offers.all %}
-                    {% if offer.status == 'ACCEPTED' %}
-                      <a class="action-link review" href="{% url 'submit_review' offer.trip.id %}">★ Leave review</a>
-                    {% endif %}
-                  {% endfor %}
-                {% endif %}
+                {% for offer in req.offers.all %}
+                  {% if offer.status == 'ACCEPTED' and offer.passenger_confirming_dropped_off and offer.driver_confirming_dropped_off %}
+                    <a class="action-link review" href="{% url 'submit_review' offer.trip.id %}">★ Leave review</a>
+                  {% endif %}
+                {% endfor %}
               </td>
             </tr>
             {% endfor %}

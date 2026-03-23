@@ -26,5 +26,9 @@ urlpatterns = [
     path('trip/<int:trip_id>/review/', views.submit_review, name='submit_review'),
     path('trip/<int:trip_id>/review/', views.submit_review, name='submit_review'),
     path('driver/<int:user_id>/profile/', views.driver_profile, name='driver_profile'),
+    path('offer/<int:offer_id>/passenger-boarding/', views.passenger_confirms_boarding, name='passenger_confirm_boarding'),
+    path('offer/<int:offer_id>/driver-boarding/', views.driver_confirm_boarding, name='driver_confirm_boarding'),
+    path('offer/<int:offer_id>/driver-dropoff/', views.driver_confirm_dropoff, name='driver_confirm_dropoff'),
+    path('offer/<int:offer_id>/passenger-dropoff/', views.passenger_confirm_dropoff, name='passenger_confirm_dropoff'),
     
 ]

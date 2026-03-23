@@ -64,6 +64,18 @@
       margin-bottom: 1.5rem;
     }
 
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -110,6 +122,19 @@
 
     .btn:hover { opacity: 0.75; }
 
+    .btn.muted {
+      background: transparent;
+      color: rgba(255,255,255,0.3);
+      border: 0.5px solid rgba(255,255,255,0.1);
+    }
+
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    .status-text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
     .empty {
       text-align: center;
       padding: 3rem 0;
@@ -129,6 +154,7 @@
     {% if full %}
       <div class="alert">Your trip is full — no more passengers can be added.</div>
     {% elif Requests|length > 0 %}
+      <p class="section-title">Pending requests</p>
       <table>
         <thead>
           <tr>
@@ -157,6 +183,60 @@
     {% else %}
       <p class="empty">No matching requests at the moment.</p>
     {% endif %}
+
+    {% with accepted_offers=Active_Trip.offers.all %}
+      {% for offer in accepted_offers %}
+        {% if offer.status == 'ACCEPTED' %}
+          {% if forloop.first %}
+            <p class="section-title">Accepted passengers</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Passenger</th>
+                  <th>Pickup</th>
+                  <th>Dropoff</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+          {% endif %}
+              <tr>
+                <td>{{ offer.carpool_request.passenger }}</td>
+                <td>{{ offer.carpool_request.pickup_node.location }}</td>
+                <td>{{ offer.carpool_request.dropoff_node.location }}</td>
+                <td>
+                  <div class="actions">
+                    {% if offer.passenger_boarded and not offer.driver_confirmed_boarding %}
+                      <form method="POST" action="{% url 'driver_confirm_boarding' offer.id %}">
+                        {% csrf_token %}
+                        <button class="btn" type="submit">Confirm boarding</button>
+                      </form>
+                    {% elif not offer.passenger_boarded %}
+                      <span class="status-text">Waiting for passenger to board</span>
+                    {% endif %}
+                    {% if offer.driver_confirmed_boarding and not offer.driver_confirming_dropped_off %}
+                      <form method="POST" action="{% url 'driver_confirm_dropoff' offer.id %}">
+                        {% csrf_token %}
+                        <button class="btn" type="submit">Confirm dropoff</button>
+                      </form>
+                    {% endif %}
+                    {% if offer.driver_confirming_dropped_off and not offer.passenger_confirming_dropped_off %}
+                      <span class="status-text">Waiting for passenger to confirm dropoff</span>
+                    {% endif %}
+                    {% if offer.driver_confirming_dropped_off and offer.passenger_confirming_dropped_off %}
+                      <span class="status-text">Ride complete ✓</span>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+          {% if forloop.last %}
+              </tbody>
+            </table>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endwith %}
+
   </div>
 </body>
 </html>
