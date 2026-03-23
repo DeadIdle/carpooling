@@ -121,9 +121,9 @@ def passenger_dashboard(request):
         return redirect('driver_dashboard')
     
 
-    ongoing_trips = CarpoolRequest.objects.filter(passenger = request.user, status__in =['PENDING', 'OFFERED'])
+    ongoing_trips = CarpoolRequest.objects.filter(passenger = request.user, status__in =['PENDING', 'OFFERED','CONFIRMED'])
     cancelled_trips = CarpoolRequest.objects.filter(passenger = request.user, status__in =['CANCELLED'])
-    past_trips = CarpoolRequest.objects.filter(passenger = request.user, status__in =['COMPLETED','CONFIRMED'])
+    past_trips = CarpoolRequest.objects.filter(passenger = request.user, status__in =['COMPLETED'])
 
     
     return render(request, 'network/passenger_dashboard.html',{'Ongoing_trips' : ongoing_trips,
