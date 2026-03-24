@@ -326,7 +326,22 @@ def update_current_node(request, trip_id, node_id):
 @login_required
 def submit_review(request, trip_id):
     trip = Trip.objects.get(id=trip_id)
-    if request.user.role in ['DR', 'PS'] and trip.status == 'COMPLETED':
+
+    if request.user.role == 'PS':
+        offer = CarpoolOffer.objects.filter(
+            trip=trip,
+            status='ACCEPTED',
+            carpool_request__passenger=request.user
+        ).first()
+    else:
+        offer = CarpoolOffer.objects.filter(
+            trip=trip,
+            status='ACCEPTED'
+        ).first()
+
+    completed = offer and offer.passenger_confirming_dropped_off and offer.driver_confirming_dropped_off
+
+    if request.user.role in ['DR', 'PS'] and completed:
         if Review.objects.filter(reviewer=request.user, trip=trip).exists():
             messages.error(request, 'You have already reviewed this trip.')
             return redirect('passenger_dashboard')
@@ -336,7 +351,7 @@ def submit_review(request, trip_id):
                 comment = request.POST.get('comment')
                 Review.objects.create(
                     reviewer=request.user,
-                    reviewee=trip.driver if request.user.role == 'PS' else CarpoolOffer.objects.get(trip=trip, status='ACCEPTED').carpool_request.passenger,
+                    reviewee=trip.driver if request.user.role == 'PS' else offer.carpool_request.passenger,
                     rating=rating,
                     comment=comment,
                     trip=trip,
